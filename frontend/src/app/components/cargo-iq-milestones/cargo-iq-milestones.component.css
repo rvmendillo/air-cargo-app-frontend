@@ -1,0 +1,15 @@
+/* cargo-iq-milestones.component.css */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.material-symbols-outlined[data-weight="fill"], .material-symbols-outlined[style*="'wght' 700"] {
+    font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 24;
+}
+.glass-panel {
+    background: rgba(248, 249, 250, 0.8);
+    backdrop-filter: blur(12px);
+}
+:host {
+    display: block;
+    height: 100%;
+}

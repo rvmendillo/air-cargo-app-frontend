@@ -1,0 +1,9 @@
+.primary-gradient {
+            background: linear-gradient(135deg, #75001d 0%, #9c102e 100%);
+        }
+        .milestone-line {
+            background-image: linear-gradient(to right, #00658d 50%, transparent 50%);
+            background-position: bottom;
+            background-size: 8px 1px;
+            background-repeat: repeat-x;
+        }
