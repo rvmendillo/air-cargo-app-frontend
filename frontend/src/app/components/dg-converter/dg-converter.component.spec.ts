@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UldTrackingComponent } from './uld-tracking.component';
+import { DgConverterComponent } from './dg-converter.component';
 
-describe('UldTrackingComponent', () => {
-  let component: UldTrackingComponent;
-  let fixture: ComponentFixture<UldTrackingComponent>;
+describe('DgConverterComponent', () => {
+  let component: DgConverterComponent;
+  let fixture: ComponentFixture<DgConverterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UldTrackingComponent ]
+      declarations: [ DgConverterComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UldTrackingComponent);
+    fixture = TestBed.createComponent(DgConverterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

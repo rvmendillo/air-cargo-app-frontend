@@ -4,18 +4,14 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DgrComplianceComponent } from './components/dgr-compliance/dgr-compliance.component';
-import { UldTrackingComponent } from './components/uld-tracking/uld-tracking.component';
-import { CargoIqMilestonesComponent } from './components/cargo-iq-milestones/cargo-iq-milestones.component';
+import { DgConverterComponent } from './components/dg-converter/dg-converter.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent,
     DgrComplianceComponent,
-    UldTrackingComponent,
-    CargoIqMilestonesComponent
+    DgConverterComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import time
 import time
 from ai.models import RequestData
 from ai.service import run_ai
@@ -14,6 +16,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+class XMLPayload(BaseModel):
+    xml_data: str
+
+@app.post("/api/convert")
+def convert_xml_endpoint(payload: XMLPayload):
+    try:
+        from converter import convert_xml_to_onerecord_jsonld
+        result = convert_xml_to_onerecord_jsonld(payload.xml_data)
+        
+        if "error" in result:
+            raise HTTPException(status_code=400, detail=result["details"])
+            
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Conversion failed: {str(e)}")
 
 @app.get("/")
 def read_root():
