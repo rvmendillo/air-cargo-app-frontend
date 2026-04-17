@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import time
+from ai.models import RequestData
+from ai.service import run_ai
 
 app = FastAPI(title="Air Cargo Dashboard API")
 
@@ -95,3 +97,8 @@ def get_uld_status():
             "milestones": ["RCL", "MAN", "DEP"]
         }
     ]
+
+@app.post("/ai")
+def ai_endpoint(data: RequestData):
+    result = run_ai(data.text)
+    return {"result": result}
