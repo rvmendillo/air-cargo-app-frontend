@@ -70,7 +70,7 @@
 <!-- Bento Grid Charts -->
 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
 <!-- Compliance Trend Chart (Luzmo style) -->
-<div class="md:col-span-8 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm relative overflow-hidden">
+<div class="md:col-span-8 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm relative overflow-hidden animate-fade-in-up delay-100">
 <div class="flex items-center justify-between mb-6">
 <h3 class="font-headline font-bold text-lg text-on-surface">Compliance Trend</h3>
 <div class="flex gap-4">
@@ -106,7 +106,7 @@
 </div>
 </div>
 <!-- Category Breakdown Chart (Circular) -->
-<div class="md:col-span-4 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm flex flex-col">
+<div class="md:col-span-4 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm flex flex-col animate-fade-in-up delay-200">
 <h3 class="font-headline font-bold text-lg text-on-surface mb-6">Category Breakdown</h3>
 <div class="flex-1 flex flex-col items-center justify-center relative">
 <svg class="w-40 h-40 -rotate-90">
@@ -145,7 +145,7 @@
 </div>
 </div>
 <!-- DG AutoCheck Acceptance Results Table -->
-<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm overflow-hidden">
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm overflow-hidden animate-fade-in-up delay-300">
 <div class="p-6 border-b border-slate-50 flex items-center justify-between bg-surface-container-low">
 <div class="flex items-center gap-3">
 <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">fact_check</span>
@@ -259,7 +259,7 @@
 <footer class="w-full py-8 mt-auto border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
 <div class="flex flex-col md:flex-row justify-between items-center px-12 md:ml-64 gap-6">
 <div class="text-center md:text-left flex flex-col items-center md:items-start gap-2">
-<img src="assets/logo.png" alt="A1R Cargo Rangers Logo" class="h-12 w-auto object-contain invert mix-blend-multiply dark:invert-0 dark:mix-blend-normal opacity-90 transition-opacity hover:opacity-100">
+<img src="assets/logo.png" alt="A1R Cargo Rangers Logo" class="h-12 w-auto object-contain">
 
 <p class="text-[10px] text-slate-400">Made with ❤️ by A1R Cargo Rangers. The source code is available in Github.</p>
 </div>
@@ -271,13 +271,3 @@
 </div>
 </div>
 </footer>
-<!-- Minimized Chatbot -->
-<div class="fixed bottom-6 right-6 z-[60]">
-<button class="w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform group">
-<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
-<!-- Tooltip -->
-<div class="absolute right-full mr-4 bg-on-surface text-white text-[10px] font-bold py-2 px-3 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                DGR Assistant Online
-            </div>
-</button>
-</div>
