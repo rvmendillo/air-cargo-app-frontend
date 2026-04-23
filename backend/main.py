@@ -20,6 +20,9 @@ app.add_middleware(
 class XMLPayload(BaseModel):
     xml_data: str
 
+class JSONPayload(BaseModel):
+    json_data: str
+
 @app.post("/api/convert")
 def convert_xml_endpoint(payload: XMLPayload):
     try:
@@ -30,6 +33,52 @@ def convert_xml_endpoint(payload: XMLPayload):
             raise HTTPException(status_code=400, detail=result["details"])
             
         return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Conversion failed: {str(e)}")
+
+@app.post("/api/convert-json")
+def convert_json_endpoint(payload: JSONPayload):
+    try:
+        import json
+        source = json.loads(payload.json_data)
+
+        # Build a ONE Record JSON-LD envelope from the incoming JSON
+        context = {
+            "@vocab": "https://onerecord.iata.org/ns/cargo#",
+            "cargo": "https://onerecord.iata.org/ns/cargo#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#"
+        }
+
+        def to_camel(s: str) -> str:
+            parts = s.replace("-", "_").split("_")
+            return parts[0] + "".join(p.title() for p in parts[1:])
+
+        def map_value(v):
+            if isinstance(v, dict):
+                return jsonld_map(v)
+            if isinstance(v, list):
+                return [map_value(i) for i in v]
+            if isinstance(v, bool):
+                return {"@value": str(v).lower(), "@type": "xsd:boolean"}
+            if isinstance(v, (int, float)):
+                return {"@value": v, "@type": "xsd:decimal"}
+            return {"@value": v}
+
+        def jsonld_map(obj: dict) -> dict:
+            result = {}
+            for k, v in obj.items():
+                key = "cargo:" + to_camel(k)
+                result[key] = map_value(v)
+            return result
+
+        body = jsonld_map(source)
+        body["@context"] = context
+        body["@type"] = "cargo:Shipment"
+        body["@id"] = "urn:one-record:" + str(source.get("messageId", "unknown"))
+
+        return body
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid JSON: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Conversion failed: {str(e)}")
 
