@@ -2,9 +2,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import time
-import time
-from ai.models import RequestData
-from ai.service import run_ai
+from ai.models.request import RequestData
+from ai.services.ai_service import run_ai
 
 app = FastAPI(title="Air Cargo Dashboard API")
 
