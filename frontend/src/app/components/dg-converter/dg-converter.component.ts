@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ChatbotService } from '../../services/chatbot.service';
 
 @Component({
   selector: 'app-dg-converter',
@@ -7,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./dg-converter.component.css']
 })
 export class DgConverterComponent implements OnInit {
+
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   xmlSource: string = '';
   formattedXmlSource: string = '';
@@ -18,7 +21,7 @@ export class DgConverterComponent implements OnInit {
   clipboardIcon: string = 'content_copy';
   isConverting: boolean = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private chatbotService: ChatbotService) { }
 
   ngOnInit(): void {
   }
@@ -59,6 +62,7 @@ export class DgConverterComponent implements OnInit {
       this.jsonResult = '';
       this.formattedJsonResult = '';
       this.showInsights = false;
+      this.chatbotService.updateXmlContext(this.xmlSource);
     };
     reader.readAsText(file);
   }
@@ -91,6 +95,7 @@ export class DgConverterComponent implements OnInit {
     this.jsonResult = '';
     this.formattedJsonResult = '';
     this.showInsights = false;
+    this.chatbotService.updateXmlContext(this.xmlSource);
   }
 
   triggerConversion() {
@@ -156,6 +161,10 @@ export class DgConverterComponent implements OnInit {
     this.formattedJsonResult = '';
     this.showInsights = false;
     this.isConverting = false;
+    
+    if (this.fileInput && this.fileInput.nativeElement) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
 }
