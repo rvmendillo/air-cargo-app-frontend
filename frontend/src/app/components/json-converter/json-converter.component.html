@@ -12,7 +12,7 @@
 <button class="p-2 hover:bg-slate-100/50 rounded-full transition-colors">
 <span class="material-symbols-outlined text-slate-600">settings</span>
 </button>
-<img alt="User profile" class="w-8 h-8 rounded-full border border-outline-variant/20" data-alt="professional portrait of a high-altitude cargo logistics coordinator in technical uniform, soft cinematic lighting, studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPn9-h76O3kp8HDj7KFTdOitg_55G6mtfuTtuzWX3v7-oKc4uRenTHL0w3NEAgwVtoj8_gnZciIRCwevH4a0T8ADzmxHUBXLplTnZGKsokQsv08G_OSeuODQgn3W3DnSCRPBIyPIs72JwlCgobBTaD6DmEPs461RdDep7tybQX6MnOHzhnQU-0shHLPhhwo4on-llnb0hWt5pN8b_tb3cvtPvLk1MCRMDGuKTJqXdhelJIwzPQkcAkqUngv20Uzw3hDFDb0yIxQhRV"/>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-outline-variant/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPn9-h76O3kp8HDj7KFTdOitg_55G6mtfuTtuzWX3v7-oKc4uRenTHL0w3NEAgwVtoj8_gnZciIRCwevH4a0T8ADzmxHUBXLplTnZGKsokQsv08G_OSeuODQgn3W3DnSCRPBIyPIs72JwlCgobBTaD6DmEPs461RdDep7tybQX6MnOHzhnQU-0shHLPhhwo4on-llnb0hWt5pN8b_tb3cvtPvLk1MCRMDGuKTJqXdhelJIwzPQkcAkqUngv20Uzw3hDFDb0yIxQhRV"/>
 </div>
 </nav>
 <!-- Side Navigation -->
@@ -22,10 +22,10 @@
 <a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-red-50 transition-all duration-150 rounded-md font-medium text-sm cursor-pointer" routerLink="/dgr-compliance">
 <span class="material-symbols-outlined">dashboard</span> Dashboard
 </a>
-<a class="flex items-center gap-3 px-3 py-2 bg-white text-red-700 shadow-sm rounded-md font-medium text-sm translate-x-1 cursor-pointer" routerLink="/dg-converter">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-red-50 transition-all duration-150 rounded-md font-medium text-sm cursor-pointer" routerLink="/dg-converter">
 <span class="material-symbols-outlined">data_object</span> XML to JSON-LD Tool
 </a>
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-red-50 transition-all duration-150 rounded-md font-medium text-sm cursor-pointer" routerLink="/json-converter">
+<a class="flex items-center gap-3 px-3 py-2 bg-white text-red-700 shadow-sm rounded-md font-medium text-sm translate-x-1 cursor-pointer" routerLink="/json-converter">
 <span class="material-symbols-outlined">data_array</span> JSON to JSON-LD Tool
 </a>
 </nav>
@@ -42,10 +42,10 @@
 <main class="ml-64 pt-24 px-12 pb-12 flex-grow">
 <header class="mb-10">
 <div class="flex items-center gap-2 mb-2">
-<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-widest rounded-full">XML to JSON-LD Tool</span>
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-widest rounded-full">JSON to JSON-LD Tool</span>
 </div>
-<h1 class="text-5xl font-extrabold tracking-tighter text-on-surface mb-2">XML to JSON-LD Data Converter</h1>
-<p class="text-on-surface-variant max-w-2xl text-lg leading-relaxed">Convert DG AutoCheck XML Connect API to ONE Record-compliant JSON-LD structure.</p>
+<h1 class="text-5xl font-extrabold tracking-tighter text-on-surface mb-2">JSON to JSON-LD Data Converter</h1>
+<p class="text-on-surface-variant max-w-2xl text-lg leading-relaxed">Convert DG Acceptance Check Results JSON into standardized ONE Record JSON-LD.</p>
 </header>
 <!-- Drag & Drop Area -->
 <section class="mb-12">
@@ -55,37 +55,41 @@
      (drop)="onDrop($event)"
      [class.border-primary]="isDragging"
      [class.bg-red-50]="isDragging">
-<input type="file" #fileInput (change)="onFileSelected($event)" class="hidden" accept=".xml">
+<input type="file" #fileInput (change)="onFileSelected($event)" class="hidden" accept=".json">
 <div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
 <span class="material-symbols-outlined text-primary text-3xl">upload_file</span>
 </div>
-<h3 class="text-xl font-bold text-on-surface mb-1">Drag and drop XML source file</h3>
-<p class="text-on-surface-variant text-sm mb-6">Supports XML Shippers' Declaration for Dangerous Goods (XSDG)</p>
+<h3 class="text-xl font-bold text-on-surface mb-1">Drag and drop JSON source file</h3>
+<p class="text-on-surface-variant text-sm mb-6">Supports DG Acceptance Check Results JSON file.</p>
 <div class="flex gap-3 relative z-10 transition-all">
 <button class="editorial-gradient text-white px-6 py-2 rounded-lg font-bold shadow-md hover:shadow-lg transition-shadow" (click)="fileInput.click()">Select File</button>
 <button class="px-6 py-2 text-primary font-bold border border-outline-variant/30 rounded-lg hover:bg-white transition-colors bg-white/50" (click)="loadSample()">Load Sample</button>
-<button *ngIf="xmlSource" class="px-6 py-2 text-red-600 font-bold border border-red-600/30 rounded-lg hover:bg-red-50 transition-colors bg-white/50 flex items-center gap-1" (click)="resetData()"> <span class="material-symbols-outlined text-[16px]">restart_alt</span> Reset</button>
+<button *ngIf="jsonSource" class="px-6 py-2 text-red-600 font-bold border border-red-600/30 rounded-lg hover:bg-red-50 transition-colors bg-white/50 flex items-center gap-1" (click)="resetData()"> <span class="material-symbols-outlined text-[16px]">restart_alt</span> Reset</button>
 </div>
+<!-- Parse error -->
+<p *ngIf="parseError" class="mt-4 text-red-600 text-sm font-semibold flex items-center gap-1">
+  <span class="material-symbols-outlined text-[16px]">error</span> {{ parseError }}
+</p>
 </div>
 </section>
 <!-- Preview Panes Asymmetric Grid -->
 <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-<!-- XML Source Pane -->
+<!-- JSON Source Pane -->
 <div class="flex flex-col gap-4">
 <div class="flex justify-between items-center px-2 mb-2 h-10">
 <div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">code</span>
-<h2 class="text-sm font-bold uppercase tracking-widest text-on-surface">XML Source Preview</h2>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">data_array</span>
+<h2 class="text-sm font-bold uppercase tracking-widest text-on-surface">JSON Source Preview</h2>
 </div>
 <div class="flex items-center gap-4">
-<button *ngIf="xmlSource && !jsonResult" (click)="triggerConversion()" [disabled]="isConverting" class="bg-primary text-white px-4 py-1.5 rounded-md text-xs font-bold shadow-md hover:bg-primary-fixed transition-colors flex items-center gap-1 disabled:opacity-50">
+<button *ngIf="jsonSource && !jsonLdResult && !parseError" (click)="triggerConversion()" [disabled]="isConverting" class="bg-primary text-white px-4 py-1.5 rounded-md text-xs font-bold shadow-md hover:bg-primary-fixed transition-colors flex items-center gap-1 disabled:opacity-50">
 <span class="material-symbols-outlined text-sm" [class.animate-spin]="isConverting">transform</span> {{ isConverting ? 'Converting...' : 'Convert' }}
 </button>
 <span class="text-[10px] text-outline uppercase font-bold tracking-tighter">Read Only</span>
 </div>
 </div>
 <div class="bg-surface-container-lowest rounded-xl shadow-sm min-h-[500px] border border-outline-variant/10 p-6 font-mono text-[13px] leading-relaxed overflow-x-auto">
-<pre class="text-on-surface-variant" [innerHTML]="formattedXmlSource"></pre>
+<pre class="text-on-surface-variant" [innerHTML]="formattedJsonSource"></pre>
 </div>
 </div>
 <!-- JSON-LD Result Pane -->
@@ -99,15 +103,15 @@
 <span class="material-symbols-outlined text-[14px]">{{ clipboardIcon }}</span> {{ clipboardText }}
 </button>
 </div>
-<div class="bg-surface-container-lowest rounded-xl shadow-sm min-h-[500px] border border-outline-variant/10 p-6 font-mono text-[13px] leading-relaxed overflow-x-auto relative flex flex-col" [class.items-center]="!jsonResult" [class.justify-center]="!jsonResult">
-<ng-container *ngIf="jsonResult">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm min-h-[500px] border border-outline-variant/10 p-6 font-mono text-[13px] leading-relaxed overflow-x-auto relative flex flex-col" [class.items-center]="!jsonLdResult" [class.justify-center]="!jsonLdResult">
+<ng-container *ngIf="jsonLdResult">
 <div class="absolute top-4 right-4 bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full text-[10px] font-bold">LATEST SCHEMAS</div>
-<pre class="text-on-surface w-full" [innerHTML]="formattedJsonResult"></pre>
+<pre class="text-on-surface w-full" [innerHTML]="formattedJsonLdResult"></pre>
 </ng-container>
-<div *ngIf="!jsonResult" class="text-center text-outline-variant flex flex-col items-center gap-2 opacity-50">
+<div *ngIf="!jsonLdResult" class="text-center text-outline-variant flex flex-col items-center gap-2 opacity-50">
 <span class="material-symbols-outlined text-5xl">schema</span>
-<p class="text-sm font-bold tracking-tighter">{{ isConverting ? 'Converting XML to JSON-LD...' : 'Awaiting Conversion' }}</p>
-<p class="text-xs">Upload or load an XML file and click Convert.</p>
+<p class="text-sm font-bold tracking-tighter">{{ isConverting ? 'Converting JSON to JSON-LD...' : 'Awaiting Conversion' }}</p>
+<p class="text-xs">Upload or load a JSON file and click Convert.</p>
 </div>
 </div>
 </div>
@@ -122,7 +126,7 @@
 </div>
 <div class="flex-grow">
 <h3 class="text-xl font-bold mb-2">AeroMetric AI Insights</h3>
-<p class="text-surface-dim text-sm max-w-2xl">Automatic mapping detected 4 non-standard elements in the source XML. Enhanced semantic relationships for "Ground Handling Instructions" have been auto-inferred using IATA ONE Record ontology v2.0.</p>
+<p class="text-surface-dim text-sm max-w-2xl">JSON structure successfully mapped to ONE Record ontology. Semantic relationships enriched with IATA ONE Record cargo vocabulary. All fields validated against JSON-LD context schema v2.0.</p>
 </div>
 <button class="bg-white text-primary px-6 py-2 rounded-lg font-bold text-sm hover:bg-surface-container-high transition-colors">Review Mappings</button>
 </div>

@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { DgrComplianceComponent } from './components/dgr-compliance/dgr-compliance.component';
 import { DgConverterComponent } from './components/dg-converter/dg-converter.component';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
+import { JsonConverterComponent } from './components/json-converter/json-converter.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DgrComplianceComponent,
     DgConverterComponent,
-    ChatbotComponent
+    ChatbotComponent,
+    JsonConverterComponent
   ],
   imports: [
     BrowserModule,
