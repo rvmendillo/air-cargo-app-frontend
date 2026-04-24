@@ -1,6 +1,5 @@
 import xmltodict
-import json
-from typing import Dict, Any, List, Union
+from typing import Dict, Any, List
 
 
 def strip_namespace(key: str) -> str:
