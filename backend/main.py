@@ -1,7 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import time
+from conversion.services.xml_to_json_service import convert_xml_string_to_json
 from ai.models.request import RequestData
 from ai.services.ai_service import run_ai
 
@@ -16,22 +17,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class XMLPayload(BaseModel):
-    xml_data: str
-
 class JSONPayload(BaseModel):
     json_data: str
 
 @app.post("/api/convert")
-def convert_xml_endpoint(payload: XMLPayload):
+async def convert_xml_to_json(request: Request):
+    """
+    Accepts raw XML string directly in the body.
+    """
     try:
-        from converter import convert_xml_to_onerecord_jsonld
-        result = convert_xml_to_onerecord_jsonld(payload.xml_data)
+        raw_body = await request.body()
         
-        if "error" in result:
-            raise HTTPException(status_code=400, detail=result["details"])
-            
+        xml_string = raw_body.decode("utf-8")
+        
+        if not xml_string:
+            raise HTTPException(status_code=400, detail="No XML data provided")
+
+        result = convert_xml_string_to_json(xml_string)
+        
         return result
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Conversion failed: {str(e)}")
 
