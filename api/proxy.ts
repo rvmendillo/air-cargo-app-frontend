@@ -1,44 +1,42 @@
+
+// api/proxy.ts
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import httpProxy from 'http-proxy';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const { url, method, body, headers } = req;
+const proxy = httpProxy.createProxyServer();
 
-  // 1. Determine the Target Domain based on the incoming path
-  let targetBase = '';
-  let targetPath = url || '';
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  return new Promise((resolve, reject) => {
+    let target = '';
 
-  if (url?.startsWith('/token')) {
-    targetBase = 'https://champ-onerecord.germanywestcentral.cloudapp.azure.com/auth/realms/onerecord/protocol/openid-connect';
-    targetPath = ''; // The /token is the endpoint itself
-  } else if (url?.startsWith('/api/AIR_CARGO_RANGERS')) {
-    targetBase = 'https://champ-onerecord.germanywestcentral.cloudapp.azure.com';
-  } else if (url?.startsWith('/api-b/inbound-message')) {
-    targetBase = 'https://champ-onerecord.germanywestcentral.cloudapp.azure.com';
-  } else if (url?.startsWith('/api/v1') || url?.startsWith('/oauth2/token')) {
-    targetBase = 'https://qa-dgautocheck.iata.org';
-  }
+    // Route logic matching your proxy.conf.json
+    if (req.url?.startsWith('/token')) {
+      target = 'https://champ-onerecord.germanywestcentral.cloudapp.azure.com/auth/realms/onerecord/protocol/openid-connect';
+      // Strip the /token part because the destination above is the full endpoint
+      req.url = ''; 
+    } else if (req.url?.startsWith('/api/AIR_CARGO_RANGERS')) {
+      target = 'https://champ-onerecord.germanywestcentral.cloudapp.azure.com';
+    } else if (req.url?.startsWith('/api-b/inbound-message')) {
+      target = 'https://champ-onerecord.germanywestcentral.cloudapp.azure.com';
+    } else if (req.url?.startsWith('/api/v1') || req.url?.startsWith('/oauth2/token')) {
+      target = 'https://qa-dgautocheck.iata.org';
+    }
 
-  const destination = `${targetBase}${targetPath}`;
-  const targetUrl = new URL(destination);
-
-  try {
-    // 2. Mirror the request to the backend
-    const response = await fetch(destination, {
-      method,
-      headers: {
-        'Content-Type': headers['content-type'] || 'application/json',
-        'Authorization': headers['authorization'] || '',
-        'Host': targetUrl.host, // THIS FORCES THE HOST HEADER TO MATCH AZURE/IATA
-      },
-      // Only include body for POST/PUT/PATCH
-      body: ['POST', 'PUT', 'PATCH'].includes(method || '') ? JSON.stringify(body) : undefined,
-    });
-
-    const data = await response.json();
+    const targetUrl = new URL(target);
     
-    // 3. Send the backend response back to Angular
-    res.status(response.status).json(data);
-  } catch (error) {
-    res.status(500).json({ error: 'Proxy Error', details: error.message });
-  }
+    // FORCING CHANGE ORIGIN (The "Magic Fix" for 405/403)
+    req.headers.host = targetUrl.host;
+
+    proxy.web(req, res, { 
+      target, 
+      changeOrigin: true, 
+      secure: false 
+    }, (err) => {
+      if (err) {
+        res.status(500).json({ error: 'Proxy Error', message: err.message });
+        return resolve(true);
+      }
+      resolve(true);
+    });
+  });
 }
