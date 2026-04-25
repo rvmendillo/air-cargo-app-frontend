@@ -4,6 +4,7 @@
     {
       "source": "/token",
       "destination": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/auth/realms/onerecord/protocol/openid-connect",
+      "statusCode": 307,
       "permanent": false
     },
     {
