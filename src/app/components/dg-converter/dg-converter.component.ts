@@ -118,7 +118,7 @@ export class DgConverterComponent implements OnInit {
   }
 
   processXmlToJson(xml: string) {
-    this.http.post('http://air-cargo-app-backend.vercel.app/api/convert', { xml_data: xml }).subscribe({
+    this.http.post('https://air-cargo-app-backend.vercel.app/api/convert', { xml_data: xml }).subscribe({
       next: (response: any) => {
         this.jsonResult = JSON.stringify(response, null, 2);
         this.formattedJsonResult = this.syntaxHighlight(this.jsonResult);

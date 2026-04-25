@@ -115,7 +115,7 @@ export class JsonConverterComponent implements OnInit {
   }
 
   processJsonToJsonLd(json: string) {
-    this.http.post('http://air-cargo-app-backend.vercel.app/api/convert-json', { json_data: json }).subscribe({
+    this.http.post('https://air-cargo-app-backend.vercel.app/api/convert-json', { json_data: json }).subscribe({
       next: (response: any) => {
         this.jsonLdResult = JSON.stringify(response, null, 2);
         this.formattedJsonLdResult = this.syntaxHighlight(this.jsonLdResult);

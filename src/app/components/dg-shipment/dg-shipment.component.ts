@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-const API_BASE = 'http://air-cargo-app-backend.vercel.app';
+const API_BASE = 'https://air-cargo-app-backend.vercel.app';
 
 export interface DgItem {
   un_number: string;

@@ -70,7 +70,7 @@ export interface AwbDashboardData {
   providedIn: 'root'
 })
 export class ApiService {
-  private backendUrl = 'http://air-cargo-app-backend.vercel.app';
+  private backendUrl = 'https://air-cargo-app-backend.vercel.app';
 
   constructor(private http: HttpClient) { }
 

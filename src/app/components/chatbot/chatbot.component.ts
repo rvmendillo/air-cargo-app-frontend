@@ -51,7 +51,7 @@ export class ChatbotComponent implements OnInit {
       promptText += `\n\nContext - Uploaded XML File:\n${this.xmlContext}`;
     }
 
-    this.http.post<any>('http://air-cargo-app-backend.vercel.app/ai', { text: promptText }).subscribe({
+    this.http.post<any>('https://air-cargo-app-backend.vercel.app/ai', { text: promptText }).subscribe({
       next: (response) => {
         const result = response.result || response;
         let answer = "I couldn't process that request.";
