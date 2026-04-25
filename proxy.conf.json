@@ -1,32 +1,21 @@
 {
-   "/token": {
-    "target": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/auth/realms/onerecord/protocol/openid-connect",
+  "/token": {
+    "target": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/auth/realms/onerecord/protocol/openid-connect/token",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/token": ""
+    }
   },
-  "/api/AIR_CARGO_RANGERS/*": {
-    "target": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com",
+
+  "/awb-record": {
+    "target": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/auth/realms/onerecord/protocol/openid-connect/token",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug"
-  },
-    "/api-b/inbound-message/*": {
-    "target": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com",
-    "secure": false,
-    "changeOrigin": true,
-    "logLevel": "debug"
-  },
-  "/api/v1/*": {
-    "target": "https://qa-dgautocheck.iata.org",
-    "secure": false,
-    "changeOrigin": true,
-    "logLevel": "debug"
-  },
-    "/oauth2/token": {
-    "target": "https://qa-dgautocheck.iata.org",
-    "secure": false,
-    "changeOrigin": true,
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/token": ""
+    }
   }
 }
