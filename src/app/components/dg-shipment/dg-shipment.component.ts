@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-const API_BASE = 'https://air-cargo-app-backend.vercel.app';
+const API_BASE = 'http://localhost:8000';
 
 export interface DgItem {
   un_number: string;
@@ -52,6 +52,11 @@ export type StepId = 1 | 2 | 3 | 4 | 5;
 export class DgShipmentComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
 
+  // ── Sidebar ───────────────────────────────────────────────────────────────
+  sidebarCollapsed = false;
+
+  toggleSidebar() { this.sidebarCollapsed = !this.sidebarCollapsed; }
+
   // ── State ─────────────────────────────────────────────────────────────────
   currentStep: StepId = 1;
   isDragging = false;
@@ -80,7 +85,7 @@ export class DgShipmentComponent {
     { id: 5, label: 'Verify', icon: 'verified', desc: 'Final DGD' },
   ];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // ── File handling ─────────────────────────────────────────────────────────
   onDragOver(e: DragEvent) { e.preventDefault(); this.isDragging = true; }
