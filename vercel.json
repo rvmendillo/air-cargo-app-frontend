@@ -1,0 +1,28 @@
+{
+  "rewrites": [
+    {
+      "source": "/token",
+      "destination": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/auth/realms/onerecord/protocol/openid-connect"
+    },
+    {
+      "source": "/api/AIR_CARGO_RANGERS/:path*",
+      "destination": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/api/AIR_CARGO_RANGERS/:path*"
+    },
+    {
+      "source": "/api-b/inbound-message/:path*",
+      "destination": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/api-b/inbound-message/:path*"
+    },
+    {
+      "source": "/api/v1/:path*",
+      "destination": "https://qa-dgautocheck.iata.org/api/v1/:path*"
+    },
+    {
+      "source": "/oauth2/token",
+      "destination": "https://qa-dgautocheck.iata.org/oauth2/token"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
