@@ -1,37 +1,11 @@
 {
   "version": 2,
-  "redirects": [
-    {
-      "source": "/token",
-      "destination": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/auth/realms/onerecord/protocol/openid-connect",
-      "statusCode": 307,
-      "permanent": false
-    },
-    {
-      "source": "/api/AIR_CARGO_RANGERS/:path*",
-      "destination": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/api/AIR_CARGO_RANGERS/:path*",
-      "permanent": false
-    },
-    {
-      "source": "/api-b/inbound-message/:path*",
-      "destination": "https://champ-onerecord.germanywestcentral.cloudapp.azure.com/api-b/inbound-message/:path*",
-      "permanent": false
-    },
-    {
-      "source": "/api/v1/:path*",
-      "destination": "https://qa-dgautocheck.iata.org/api/v1/:path*",
-      "permanent": false
-    },
-    {
-      "source": "/oauth2/token",
-      "destination": "https://qa-dgautocheck.iata.org/oauth2/token",
-      "permanent": false
-    }
-  ],
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/token", "destination": "/api/proxy" },
+    { "source": "/api/AIR_CARGO_RANGERS/:path*", "destination": "/api/proxy" },
+    { "source": "/api-b/inbound-message/:path*", "destination": "/api/proxy" },
+    { "source": "/api/v1/:path*", "destination": "/api/proxy" },
+    { "source": "/oauth2/token", "destination": "/api/proxy" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
