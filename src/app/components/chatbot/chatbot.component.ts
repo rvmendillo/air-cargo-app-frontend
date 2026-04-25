@@ -25,7 +25,7 @@ export class ChatbotComponent implements OnInit {
     this.chatbotService.currentXmlContext.subscribe(xml => {
       this.xmlContext = xml;
     });
-    
+
     // Initial greeting
     this.messages.push({
       role: 'assistant',
@@ -51,11 +51,11 @@ export class ChatbotComponent implements OnInit {
       promptText += `\n\nContext - Uploaded XML File:\n${this.xmlContext}`;
     }
 
-    this.http.post<any>('http://localhost:8000/ai', { text: promptText }).subscribe({
+    this.http.post<any>('http://air-cargo-app-backend.vercel.app/ai', { text: promptText }).subscribe({
       next: (response) => {
         const result = response.result || response;
         let answer = "I couldn't process that request.";
-        
+
         if (result.answer) {
           answer = result.answer;
         } else if (result.violation) {
@@ -76,7 +76,7 @@ export class ChatbotComponent implements OnInit {
       }
     });
   }
-  
+
   scrollToBottom() {
     setTimeout(() => {
       const container = document.getElementById('chat-messages-container');

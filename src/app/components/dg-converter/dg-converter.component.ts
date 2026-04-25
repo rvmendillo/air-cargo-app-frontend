@@ -118,12 +118,12 @@ export class DgConverterComponent implements OnInit {
   }
 
   processXmlToJson(xml: string) {
-    this.http.post('http://localhost:8000/api/convert', { xml_data: xml }).subscribe({
+    this.http.post('http://air-cargo-app-backend.vercel.app/api/convert', { xml_data: xml }).subscribe({
       next: (response: any) => {
         this.jsonResult = JSON.stringify(response, null, 2);
         this.formattedJsonResult = this.syntaxHighlight(this.jsonResult);
         this.isConverting = false;
-        
+
         // show AI insights
         this.showInsights = false;
         setTimeout(() => {
@@ -161,7 +161,7 @@ export class DgConverterComponent implements OnInit {
     this.formattedJsonResult = '';
     this.showInsights = false;
     this.isConverting = false;
-    
+
     if (this.fileInput && this.fileInput.nativeElement) {
       this.fileInput.nativeElement.value = '';
     }
