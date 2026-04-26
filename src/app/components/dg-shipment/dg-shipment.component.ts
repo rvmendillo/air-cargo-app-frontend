@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'https://air-cargo-app-frontend.vercel.app';
 
 export interface DgItem {
   un_number: string;
