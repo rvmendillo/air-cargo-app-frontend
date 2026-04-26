@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ApiService, AwbDashboardData, CheckResult, SubCheck, Piece, DangerousGood, Shipment, WaybillInfo } from '../../services/api.service';
-import { ChatbotService } from '../../services/chatbot.service';
 
 @Component({
   selector: 'app-dgr-compliance',
@@ -11,6 +10,14 @@ export class DgrComplianceComponent implements OnInit {
 
   // ── Sidebar ────────────────────────────────────────────────────────────────
   sidebarCollapsed = false;
+  sidebarHidden = false;
+
+  private readonly MOBILE_BREAKPOINT = 768;
+
+  @HostListener('window:resize')
+  onResize() {
+    this.sidebarHidden = window.innerWidth <= this.MOBILE_BREAKPOINT;
+  }
 
   toggleSidebar() { this.sidebarCollapsed = !this.sidebarCollapsed; }
 
@@ -21,7 +28,6 @@ export class DgrComplianceComponent implements OnInit {
   // ── State ──────────────────────────────────────────────────────────────────
   isLoading = false;
   error: string | null = null;
-  notFound = false;
 
   // ── Accordion state ────────────────────────────────────────────────────────
   expandedChecks = new Set<number>();
@@ -83,9 +89,10 @@ export class DgrComplianceComponent implements OnInit {
     return this.allPieces.length;
   }
 
-  constructor(private apiService: ApiService, private chatbotService: ChatbotService) { }
+  constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
+    this.sidebarHidden = window.innerWidth <= this.MOBILE_BREAKPOINT;
   }
 
   loadAwbData(): void {
@@ -94,7 +101,6 @@ export class DgrComplianceComponent implements OnInit {
 
     this.isLoading = true;
     this.error = null;
-    this.notFound = false;
     this.dashboardData = null;
     this.expandedChecks.clear();
 
@@ -102,19 +108,10 @@ export class DgrComplianceComponent implements OnInit {
       next: (data) => {
         this.dashboardData = data;
         this.isLoading = false;
-        // Push AWB data to chatbot for context-aware conversations
-        this.chatbotService.updateAwbContext(data);
       },
       error: (err) => {
-        const status = err?.status;
-        if (status === 404 || status === 400) {
-          this.notFound = true;
-          this.error = null;
-        } else {
-          this.error = err?.error?.detail ?? err?.message ?? 'Failed to fetch AWB data from ONE Record.';
-        }
+        this.error = err?.error?.detail ?? err?.message ?? 'Failed to fetch AWB data from ONE Record.';
         this.isLoading = false;
-        this.chatbotService.clearAwbContext();
       }
     });
   }
