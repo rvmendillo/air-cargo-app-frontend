@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/token", "destination": "/api/proxy" },
+    { "source": "/api/AIR_CARGO_RANGERS/:path*", "destination": "/api/proxy" },
+    { "source": "/api-b/inbound-message/:path*", "destination": "/api/proxy" },
+    { "source": "/api/v1/:path*", "destination": "/api/proxy" },
+    { "source": "/oauth2/token", "destination": "/api/proxy" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
