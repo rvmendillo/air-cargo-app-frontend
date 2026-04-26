@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -9,6 +9,14 @@ import { HttpClient } from '@angular/common/http';
 export class JsonConverterComponent implements OnInit {
 
   @ViewChild('fileInput') fileInput!: ElementRef;
+
+  sidebarHidden = false;
+  private readonly MOBILE_BREAKPOINT = 768;
+
+  @HostListener('window:resize')
+  onResize() {
+    this.sidebarHidden = window.innerWidth <= this.MOBILE_BREAKPOINT;
+  }
 
   jsonSource: string = '';
   formattedJsonSource: string = '';
@@ -23,7 +31,9 @@ export class JsonConverterComponent implements OnInit {
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.sidebarHidden = window.innerWidth <= this.MOBILE_BREAKPOINT;
+  }
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
