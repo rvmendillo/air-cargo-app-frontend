@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ChatbotService } from '../../services/chatbot.service';
 
@@ -10,6 +10,14 @@ import { ChatbotService } from '../../services/chatbot.service';
 export class DgConverterComponent implements OnInit {
 
   @ViewChild('fileInput') fileInput!: ElementRef;
+
+  sidebarHidden = false;
+  private readonly MOBILE_BREAKPOINT = 768;
+
+  @HostListener('window:resize')
+  onResize() {
+    this.sidebarHidden = window.innerWidth <= this.MOBILE_BREAKPOINT;
+  }
 
   xmlSource: string = '';
   formattedXmlSource: string = '';
@@ -24,6 +32,7 @@ export class DgConverterComponent implements OnInit {
   constructor(private http: HttpClient, private chatbotService: ChatbotService) { }
 
   ngOnInit(): void {
+    this.sidebarHidden = window.innerWidth <= this.MOBILE_BREAKPOINT;
   }
 
   onDragOver(event: DragEvent) {
