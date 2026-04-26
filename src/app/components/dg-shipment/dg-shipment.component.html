@@ -1,7 +1,7 @@
 <!-- Top Navigation -->
 <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl shadow-sm flex justify-between items-center px-8 h-16">
   <div class="flex items-center gap-3">
-    <button (click)="toggleSidebar()" class="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
+    <button (click)="toggleSidebar()" class="hide-mobile p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
       <span class="material-symbols-outlined text-slate-600">{{ sidebarCollapsed ? 'menu' : 'menu_open' }}</span>
     </button>
     <img src="assets/skyler.png" alt="Skyler" class="h-8 w-auto object-contain">
@@ -21,7 +21,7 @@
 
 <!-- Side Navigation -->
 <aside
-  class="h-screen fixed left-0 top-0 pt-20 border-r border-slate-100 flex flex-col gap-2 p-4 bg-slate-50 z-40 transition-all duration-300"
+  class="hide-mobile h-screen fixed left-0 top-0 pt-20 border-r border-slate-100 flex flex-col gap-2 p-4 bg-slate-50 z-40 transition-all duration-300"
   [style.width]="sidebarCollapsed ? '72px' : '256px'">
   <nav class="flex flex-col gap-1">
     <a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-red-50 transition-all rounded-md font-medium text-sm cursor-pointer"
@@ -53,7 +53,7 @@
     <span
       class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold uppercase tracking-widest rounded-full">1Neo-Connect
       + DG AutoCheck</span>
-    <h1 class="text-4xl font-extrabold tracking-tighter text-slate-900 mt-2 mb-1">DG Shipment</h1>
+    <h1 class="text-4xl font-extrabold tracking-tighter text-slate-900 mt-2 mb-1">DGD Check</h1>
     <p class="text-slate-500 text-base">End-to-end DG shipment lifecycle — from XSDG upload to DG AutoCheck
       verification, powered by 1Neo-Connect.</p>
   </header>
@@ -68,11 +68,11 @@
           <span *ngIf="!isStepCompleted(step.id)" class="material-symbols-outlined text-sm">{{ step.icon }}</span>
           <span *ngIf="isStepCompleted(step.id)" class="material-symbols-outlined text-sm">check</span>
         </div>
-        <!-- <span class="text-[10px] font-bold mt-1 uppercase tracking-wider" [class.text-red-700]="isStepActive(step.id)"
+        <span class="text-[10px] font-bold mt-1 uppercase tracking-wider" [class.text-red-700]="isStepActive(step.id)"
           [class.text-emerald-600]="isStepCompleted(step.id)"
           [class.text-slate-400]="!isStepActive(step.id) && !isStepCompleted(step.id)">
           {{ step.label }}
-        </span> -->
+        </span>
         <span class="text-[9px] text-slate-400">{{ step.desc }}</span>
       </div>
       <div *ngIf="i < steps.length - 1" class="step-connector" [class.step-connector-done]="isStepCompleted(step.id)">
@@ -121,7 +121,7 @@
       <p class="text-sm text-slate-500 mb-4">XML Shipper's Declaration for Dangerous Goods</p>
       <div class="flex gap-3" (click)="$event.stopPropagation()">
         <button class="btn-primary" (click)="fileInput.click()">Browse File</button>
-        <button class="btn-outline" (click)="loadSample()">Load Sample XSDG</button>
+        <!-- <button class="btn-outline" (click)="loadSample()">Load Sample XSDG</button> -->
       </div>
     </div>
 
@@ -133,7 +133,7 @@
     </div>
 
     <div class="flex gap-3 mt-6">
-      <button class="btn-primary btn-lg" (click)="createShipment()" [disabled]="!rawXml || isLoading">
+      <button class="btn-primary btn-lg" (click)="create()" [disabled]="!rawXml || isLoading">
         <span class="material-symbols-outlined text-sm">add_circle</span>
         Create 1R DG Shipment
       </button>
@@ -141,38 +141,12 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <!-- STEP 2 — VIEW DGD                                                       -->
+  <!-- STEP 2 — CHECK                                                      -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <section *ngIf="currentStep === 2 && dgd" class="animate-fade-in">
-    <!-- ONE Record creation badge -->
-    <div class="mb-4 flex items-center gap-3 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-xl">
-      <span class="material-symbols-outlined text-emerald-600"
-        style="font-variation-settings:'FILL' 1">check_circle</span>
-      <div>
-        <p class="text-xs font-bold text-emerald-700">ONE Record Shipment Created</p>
-        <p class="text-[11px] text-slate-500 font-mono">{{ oneRecordId }} · Created {{ formattedCreatedAt }}</p>
-      </div>
-    </div>
-
-    <!-- DGD Card -->
-    <ng-container *ngTemplateOutlet="dgdCard; context: { showResults: false }"></ng-container>
-
-    <div class="flex gap-3 mt-6">
-      <button class="btn-primary btn-lg" (click)="proceedToCheck()">
-        <span class="material-symbols-outlined text-sm">fact_check</span>
-        Perform DG AutoCheck
-      </button>
-      <button class="btn-ghost" (click)="reset()">Start Over</button>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <!-- STEP 3 — DG AUTOCHECK                                                   -->
-  <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <section *ngIf="currentStep === 3" class="animate-fade-in">
+  <section *ngIf="currentStep === 2" class="animate-fade-in">
     <div class="card">
       <div class="card-header">
-        <span class="step-badge">Step 3</span>
+        <span class="step-badge">Step 2</span>
         <h2 class="card-title">DG AutoCheck Verification</h2>
         <p class="card-subtitle">The original XSDG will be sent to the IATA DG AutoCheck Connect API. The API validates
           against IATA DGR regulations and returns a detailed check result.</p>
@@ -185,36 +159,83 @@
           <span class="text-xs font-bold uppercase tracking-wider text-slate-500">What's being sent to DG
             AutoCheck</span>
         </div>
-        <div class="grid grid-cols-2 gap-3 text-sm">
-          <div><span class="label">AWB Number</span><span class="value">{{ dgd?.awb_number }}</span></div>
-          <div><span class="label">Shipment ID</span><span class="value font-mono text-xs">{{ shipmentId }}</span></div>
-          <div><span class="label">Origin</span><span class="value">{{ dgd?.origin }}</span></div>
-          <div><span class="label">Destination</span><span class="value">{{ dgd?.destination }}</span></div>
-          <div><span class="label">UN Number(s)</span>
-            <span class="value">{{ dgd?.dg_items?.[0]?.un_number || 'N/A' }}</span>
-          </div>
-          <div><span class="label">Payload</span><span class="value">Original XSDG XML</span></div>
+
+        <div class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <ng-container *ngTemplateOutlet="recursiveGrid; context: { $implicit: humanReadable, parentLabel: '' }">
+          </ng-container>
         </div>
+
+        <ng-template #recursiveGrid let-obj let-parentLabel="parentLabel">
+          <ng-container *ngFor="let item of obj | keyvalue: keepOrder">
+
+            <ng-container *ngIf="isObject(item.value); else simpleValue">
+
+              <div *ngIf="isArray(obj)" class="col-span-2 mt-4 mb-1">
+                <h3 class="text-blue-600 font-bold uppercase text-[11px] tracking-wider border-b border-blue-50">
+                  {{ getArrayItemHeader(parentLabel, item.key) }}
+                </h3>
+              </div>
+
+              <div *ngIf="!isArray(obj) && !isArray(item.value)" class="col-span-2 mt-4 mb-1">
+                <h3 class="text-blue-800 font-bold uppercase text-[11px] tracking-wider">
+                  {{ formatLabel(item.key) }}
+                </h3>
+              </div>
+
+              <ng-container *ngTemplateOutlet="recursiveGrid; context: {
+                  $implicit: item.value,
+                  parentLabel: isArray(obj) ? parentLabel : formatLabel(item.key)
+                }">
+              </ng-container>
+            </ng-container>
+
+            <ng-template #simpleValue>
+              <div class="flex flex-col border-b border-gray-50 pb-1">
+                <span class="text-gray-400 font-medium text-[10px] uppercase">
+                  {{ formatLabel(item.key) }}
+                </span>
+                <span class="text-gray-900 font-semibold">
+                  {{ item.value || '---' }}
+                </span>
+              </div>
+            </ng-template>
+
+          </ng-container>
+        </ng-template>
+
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <ng-container *ngTemplateOutlet="recursiveGrid; context: { $implicit: humanReadable }">
+          </ng-container>
+        </div>
+
+        <ng-template #recursiveGrid let-obj>
+          <ng-container *ngFor="let item of obj | keyvalue">
+            <div *ngIf="!isObject(item.value)">
+              <span class="label">{{ formatLabel(item.key) }}: </span>
+              <span class="value">{{ item.value }}</span>
+            </div>
+
+            <ng-container *ngIf="isObject(item.value)">
+              <ng-container *ngTemplateOutlet="recursiveGrid; context: { $implicit: item.value }"></ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-template>
       </div>
 
       <div class="flex gap-3 mt-6">
-        <button class="btn-check btn-lg" (click)="performCheck()" [disabled]="isLoading">
+        <button class="btn-check btn-lg" (click)="convert()" [disabled]="isLoading">
           <span class="material-symbols-outlined text-sm">verified_user</span>
           Send to DG AutoCheck
         </button>
-        <button class="btn-ghost" (click)="currentStep = 2">Back to DGD</button>
+        <button class="btn-ghost" (click)="currentStep = 1">Back to Upload</button>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <!-- STEP 4 is automatic (triggered after check) - shown briefly via loader  -->
+  <!-- STEP 3 — FINAL DGD WITH RESULTS                                         -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-  <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <!-- STEP 5 — FINAL DGD WITH RESULTS                                         -->
-  <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <section *ngIf="currentStep === 5" class="animate-fade-in">
+  <section *ngIf="currentStep === 5 && !isLoading" class="animate-fade-in">
 
     <!-- API note if using mock -->
     <div *ngIf="apiNote"
@@ -234,12 +255,12 @@
           </span>
         </div>
         <div>
-          <p class="text-2xl font-black tracking-tight">{{ checkStatus === 'PASSED' ? '✓ DG AutoCheck PASSED' : '✗ DG
-            AutoCheck FAILED' }}</p>
-          <p class="text-sm opacity-80 mt-0.5">
+          <p class="text-2xl font-black tracking-tight">{{ checkStatus === 'PASSED' ? 'DG AutoCheck: PASSED' : 'DG
+            AutoCheck: FAILED' }}</p>
+          <!-- <p class="text-sm opacity-80 mt-0.5">
             {{ passCount }} of {{ checkResults.length }} checks passed ·
             Verified {{ formattedCheckedAt }} via {{ checkSource }}
-          </p>
+          </p> -->
         </div>
       </div>
     </div>
@@ -252,37 +273,32 @@
       <div class="flex items-center gap-3 mb-5">
         <span class="material-symbols-outlined text-red-700" style="font-variation-settings:'FILL' 1">rule</span>
         <h3 class="font-bold text-slate-900">DG AutoCheck — Detailed Results</h3>
-        <span class="ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold"
+        <!-- <span class="ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold"
           [class.bg-emerald-100]="checkStatus === 'PASSED'" [class.text-emerald-700]="checkStatus === 'PASSED'"
           [class.bg-red-100]="checkStatus === 'FAILED'" [class.text-red-700]="checkStatus === 'FAILED'">
           {{ passCount }} PASS / {{ failCount }} FAIL
-        </span>
+        </span> -->
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
           <thead>
             <tr class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
-              <th class="px-4 py-3">Check</th>
-              <th class="px-4 py-3">Category</th>
-              <th class="px-4 py-3">Regulation</th>
-              <th class="px-4 py-3">Finding</th>
-              <th class="px-4 py-3 text-center">Result</th>
+              <th class="px-4 py-3">Check ID</th>
+              <th class="px-4 py-3">AWB#</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Reason</th>
+              <th class="px-4 py-3 text-center">Certified By</th>
+              <th class="px-4 py-3 text-center">Timestamp</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
-            <tr *ngFor="let check of checkResults" class="hover:bg-slate-50">
-              <td class="px-4 py-3 font-semibold text-slate-800">{{ check.check_name }}</td>
-              <td class="px-4 py-3 text-slate-500 text-xs">{{ check.category }}</td>
-              <td class="px-4 py-3 text-xs font-mono text-slate-400">{{ check.regulation }}</td>
-              <td class="px-4 py-3 text-xs text-slate-600 max-w-xs">{{ check.message }}</td>
-              <td class="px-4 py-3 text-center">
-                <span class="px-3 py-1 rounded-full text-[10px] font-bold"
-                  [class.bg-emerald-50]="check.result === 'PASS'" [class.text-emerald-700]="check.result === 'PASS'"
-                  [class.bg-red-50]="check.result === 'FAIL'" [class.text-red-700]="check.result === 'FAIL'"
-                  [class.bg-slate-100]="check.result === 'N/A'" [class.text-slate-500]="check.result === 'N/A'">
-                  {{ check.result }}
-                </span>
-              </td>
+            <tr *ngFor="let item of [fullAwb]">
+              <td class="px-4 py-3">{{ acceptanceCheckId }}</td>
+              <td class="px-4 py-3">{{ airWaybillNumber }}</td>
+              <td class="px-4 py-3">{{ fullAwb.status }}</td>
+              <td class="px-4 py-3">{{ fullAwb.reason }}</td>
+              <td class="px-4 py-3 text-center">{{ fullAwb.certifiedBy }}</td>
+              <td class="px-4 py-3 text-center">{{ fullAwb.timestamp | date:'yyyy-MM-dd HH:mm' }}</td>
             </tr>
           </tbody>
         </table>

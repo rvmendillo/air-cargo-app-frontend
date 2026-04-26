@@ -1,6 +1,5 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ChatbotService } from '../../services/chatbot.service';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -55,6 +54,14 @@ export class DgShipmentComponent {
 
   // ── Sidebar ───────────────────────────────────────────────────────────────
   sidebarCollapsed = false;
+  sidebarHidden = false;
+
+  private readonly MOBILE_BREAKPOINT = 768;
+
+  @HostListener('window:resize')
+  onResize() {
+    this.sidebarHidden = window.innerWidth <= this.MOBILE_BREAKPOINT;
+  }
 
   toggleSidebar() { this.sidebarCollapsed = !this.sidebarCollapsed; }
 
@@ -86,7 +93,9 @@ export class DgShipmentComponent {
     { id: 5, label: 'Verify', icon: 'verified', desc: 'Final DGD' },
   ];
 
-  constructor(private http: HttpClient, private chatbotService: ChatbotService) { }
+  constructor(private http: HttpClient) {
+    this.sidebarHidden = window.innerWidth <= this.MOBILE_BREAKPOINT;
+  }
 
   // ── File handling ─────────────────────────────────────────────────────────
   onDragOver(e: DragEvent) { e.preventDefault(); this.isDragging = true; }
@@ -100,10 +109,7 @@ export class DgShipmentComponent {
   }
   readFile(file: File) {
     const reader = new FileReader();
-    reader.onload = (ev: any) => {
-      this.rawXml = ev.target.result;
-      this.chatbotService.updateXmlContext(this.rawXml);
-    };
+    reader.onload = (ev: any) => { this.rawXml = ev.target.result; };
     reader.readAsText(file);
   }
 
@@ -196,29 +202,10 @@ export class DgShipmentComponent {
         this.oneRecordId = res.one_record_id;
         this.createdAt = res.created_at;
         this.dgd = res.dgd;
+        this.airWaybillNumber = res.dgd?.awb_number || '';
+        this.buildHumanReadable();
         this.isLoading = false;
         this.currentStep = 2;
-        // Push DGD data to chatbot for context-aware conversations
-        this.chatbotService.updateAwbContext({
-          masterWaybill: { awbNumber: this.dgd?.awb_number, origin: this.dgd?.origin, destination: this.dgd?.destination },
-          shipments: [{
-            description: 'DG Shipment',
-            totalWeight: this.dgd?.gross_weight,
-            weightUnit: this.dgd?.weight_unit,
-            pieces: [{
-              dangerousGoods: (this.dgd?.dg_items || []).map((item: any) => ({
-                unNumber: item.un_number,
-                properShippingName: item.proper_shipping_name,
-                hazardClass: item.hazard_class,
-                packingGroup: item.packing_group,
-                packingInstruction: item.packing_instruction,
-                quantity: item.quantity,
-                unit: item.quantity_unit
-              }))
-            }]
-          }],
-          checks: []
-        });
       },
       error: (err) => {
         this.isLoading = false;
@@ -226,6 +213,21 @@ export class DgShipmentComponent {
       }
     });
   }
+
+  private buildHumanReadable() {
+    if (!this.dgd) { this.humanReadable = {}; return; }
+    this.humanReadable = {
+      'AWB Number': this.dgd.awb_number,
+      'Shipment ID': this.shipmentId,
+      'Origin': this.dgd.origin,
+      'Destination': this.dgd.destination,
+      'Pieces': this.dgd.piece_quantity,
+      'Gross Weight': `${this.dgd.gross_weight} ${this.dgd.weight_unit}`,
+      'Shipper': this.dgd.shipper?.name,
+      'Consignee': this.dgd.consignee?.name,
+    };
+  }
+
 
   // ── Step 2 → 3: proceed to check ─────────────────────────────────────────
   proceedToCheck() { this.currentStep = 3; this.errorMessage = ''; }
@@ -246,6 +248,13 @@ export class DgShipmentComponent {
         this.checkedAt = res.checked_at;
         this.checkSource = res.source;
         this.apiNote = res.api_note || '';
+        this.acceptanceCheckId = res.check_id || this.shipmentId;
+        this.fullAwb = {
+          status: res.status || '',
+          reason: res.reason || (res.status === 'PASSED' ? 'All checks passed' : 'One or more checks failed'),
+          certifiedBy: res.certified_by || res.source || 'DG AutoCheck',
+          timestamp: res.checked_at || new Date().toISOString()
+        };
         this.isLoading = false;
         this.proceedToUpdate();
       },
@@ -288,8 +297,25 @@ export class DgShipmentComponent {
     this.checkStatus = '';
     this.errorMessage = '';
     this.isLoading = false;
+    this.fullAwb = { status: '', reason: '', certifiedBy: '', timestamp: '' };
+    this.acceptanceCheckId = '';
+    this.airWaybillNumber = '';
+    this.humanReadable = {};
     if (this.fileInput?.nativeElement) this.fileInput.nativeElement.value = '';
   }
+
+  // ── Aliases for template ───────────────────────────────────────────────────
+  create() { this.createShipment(); }
+
+  convert() {
+    this.performCheck();
+  }
+
+  // ── Result data for Step 3 table ──────────────────────────────────────────
+  fullAwb: any = { status: '', reason: '', certifiedBy: '', timestamp: '' };
+  acceptanceCheckId: string = '';
+  airWaybillNumber: string = '';
+  humanReadable: any = {};
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   get passCount() { return this.checkResults.filter(c => c.result === 'PASS').length; }
@@ -308,4 +334,30 @@ export class DgShipmentComponent {
   isStepCompleted(stepId: number): boolean { return this.currentStep > stepId; }
   isStepActive(stepId: number): boolean { return this.currentStep === stepId; }
   isStepReachable(stepId: number): boolean { return this.currentStep >= stepId; }
+
+  // ── Utility methods for recursive grid template ───────────────────────────
+  isObject(val: any): boolean {
+    return val !== null && typeof val === 'object';
+  }
+
+  isArray(val: any): boolean {
+    return Array.isArray(val);
+  }
+
+  formatLabel(key: any): string {
+    if (!key) return '';
+    const k = String(key);
+    // Convert snake_case or camelCase to Title Case
+    return k
+      .replace(/_/g, ' ')
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  keepOrder = (a: any, b: any) => 0;
+
+  getArrayItemHeader(parentLabel: any, index: any): string {
+    const label = parentLabel || 'Item';
+    return `${label} #${(+index) + 1}`;
+  }
 }
